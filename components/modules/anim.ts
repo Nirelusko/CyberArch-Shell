@@ -375,9 +375,10 @@ const startWsAnim = (st: WsState) => {
  })
 }
 
-export const triggerWsSwitch = (target) => {
+export const triggerWsSwitch = (target, monitorKey?) => {
  if (!animOn("animGlitch")) return
  for (const st of wsStates) {
+     if (monitorKey && (st.x + ',' + st.y) !== monitorKey) continue
      st.seed = (Date.now() * 9301 + 49297 + st.x + st.y) % 233280
      recache(st)
      startWsAnim(st)

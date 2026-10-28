@@ -203,12 +203,16 @@ local function applyDefaults(mod)
     end
 end
 
-CD.bind("SUPER + TAB", app("scripts/launcher"), "LAUNCHER")
-CD.bind("SUPER + T", hl.dsp.exec_cmd("rio"), "RIO TERMINAL")
-CD.bind("SUPER + SHIFT + T", hl.dsp.exec_cmd("cool-retro-term"), "RETRO TERMINAL")
-CD.bind("SUPER + ALT + D", hl.dsp.exec_cmd("discord"), "DISCORD")
-CD.bind("SUPER + E", hl.dsp.exec_cmd("thunar"), "FILES")
-CD.bind("SUPER + D", app("scripts/peek"), "PEEK")
+CD.bind("SUPER + D", app("scripts/launcher"), "LAUNCHER")
+CD.bind("SUPER + Return", hl.dsp.exec_cmd("kitty"), "TERMINAL")
+CD.bind("SUPER + T", hl.dsp.exec_cmd("cool-retro-term"), "RETRO TERMINAL")
+CD.bind("SUPER + W", hl.dsp.exec_cmd("vesktop"), "DISCORD")
+CD.bind("SUPER + E", hl.dsp.exec_cmd("dolphin"), "FILES")
+CD.bind("SUPER + F", hl.dsp.exec_cmd("zen-browser"), "BROWSER")
+CD.bind("SUPER + C", hl.dsp.exec_cmd("gnome-calculator"), "CALCULATOR")
+CD.bind("SUPER + M", hl.dsp.exec_cmd("pear-desktop"), "MUSIC")
+CD.bind("SUPER + G", app("scripts/ws go Gaming"), "GAMING")
+CD.bind("SUPER + SHIFT + G", app("scripts/ws move Gaming"), "MOVE TO GAMING")
 CD.bind("CTRL + SHIFT + ALT + r", app("scripts/restart"), "RESTART THEME")
 CD.bind("SUPER + CTRL + Delete", hl.dsp.exec_cmd("hyprctl reload"), "RELOAD HYPRLAND")
 CD.bind("SUPER + mouse:272", hl.dsp.window.drag(), "DRAG WINDOW", { mouse = true })
@@ -234,8 +238,8 @@ end)
 
 for i = 1, 10 do
     local key = i % 10
-    CD.bind("ALT + SHIFT + " .. key, app("scripts/ws move " .. i), "MOVE TO WS " .. i)
-    CD.bind("SUPER + " .. key,       app("scripts/ws go " .. i),   "WORKSPACE " .. i)
+    CD.bind("SUPER + SHIFT + " .. key, app("scripts/ws move " .. i), "MOVE TO WS " .. i)
+    CD.bind("SUPER + " .. key,         app("scripts/ws go " .. i),   "WORKSPACE " .. i)
 end
 
 CD.actions = {
@@ -252,7 +256,7 @@ CD.actions = {
     { id="hud.pwr",      label="POWER",               mod="@themeMod", key="P",         group="deck", run=sock("modal pwr") },
     { id="hud.forecast", label="FORECAST",            mod="@themeMod", key="W",         group="deck", run=sock("forecast") },
     { id="hud.clock",    label="CLOCK",               mod="@themeMod", key="minus",     group="deck", run=sock("clock") },
-    { id="hud.markets",  label="MARKETS",             mod="@themeMod", key="G",         group="deck", run=sock("markets") },
+    -- -- { id="hud.markets",  label="MARKETS",             mod="@themeMod", key="G",         group="deck", run=sock("markets") },
     { id="hud.bat",      label="BATTERY",             mod="@themeMod", key="Y",         group="deck", run=sock("modal bat") },
     { id="hud.sys",      label="SYSTEM",              mod="@themeMod", key="C",         group="deck", run=sock("modal sys") },
     { id="hud.keys",     label="KEYBINDS",            mod="@themeMod", key="H",         group="deck", run=sock("modal keys") },

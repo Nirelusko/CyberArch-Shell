@@ -138,6 +138,9 @@ once("bash " .. cyberpunk .. "/scripts/apply_theme")
 dofile(cyberpunk .. "/config/keybinds.lua")
 
 hl.config({
+    input = {
+        kb_layout = "no",
+    },
     misc = {
         allow_session_lock_restore = true,
         force_default_wallpaper = 0,
@@ -185,6 +188,7 @@ hl.config({
         screen_shader = "",
     },
 })
+
 
 hl.layer_rule({ match = { namespace = "modal_.*" }, blur = true })
 

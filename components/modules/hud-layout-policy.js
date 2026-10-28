@@ -1,17 +1,20 @@
-export const COMPONENTS = ['monitors', 'sidepanel', 'markets', 'hordock', 'toggles', 'launcher']
+export const COMPONENTS = ['monitors', 'workspaces', 'sidepanel', 'markets', 'hordock', 'toggles', 'launcher']
 export const ANCHORS = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 const placement = {
- monitors: ['top-left', 20, 20], sidepanel: ['top-right', 28, 26],
+ monitors: ['top-left', 20, 20], workspaces: ['top-left', 24, 196], sidepanel: ['top-right', 28, 26],
  markets: ['top-right', 0, 560], hordock: ['bottom-left', 0, 0],
  toggles: ['bottom-left', 0, 0], launcher: ['bottom-right', 3, 0],
+}
+// Components that stay visible in the Minimal profile.
+const ALWAYS = ['hordock', 'toggles', 'launcher']
+function defaultComponent(name, profile) {
+ const [anchor, x, y] = placement[name]
+ return { visible: profile !== 'Minimal' || ALWAYS.includes(name), scale: 1, anchor, x, y }
 }
 export function layoutProfile(profile = 'Cinematic') {
  if (!['Minimal', 'Balanced', 'Cinematic'].includes(profile)) throw Error('Unknown profile')
  return { version: 1, profile, globalScale: profile === 'Balanced' ? 0.75 : 1,
-  components: Object.fromEntries(COMPONENTS.map(name => {
-   const [anchor, x, y] = placement[name]
-   return [name, { visible: profile !== 'Minimal' || ['hordock', 'toggles', 'launcher'].includes(name), scale: 1, anchor, x, y }]
-  })) }
+  components: Object.fromEntries(COMPONENTS.map(name => [name, defaultComponent(name, profile)])) }
 }
 export function createSurfaces(layout, create) {
  return COMPONENTS.filter(name => layout.components[name].visible).map(name => create(name))
@@ -34,7 +37,10 @@ export function validateLayout(value) {
  const result = { version: 1, profile: value.profile, globalScale: value.globalScale, components: {} }
  for (const name of COMPONENTS) {
   const c = value.components?.[name]
-  if (!c || typeof c.visible !== 'boolean' || !number(c.scale, 0.25, 2) || !ANCHORS.includes(c.anchor)
+  // Layouts saved by older builds lack newly added components: migrate them
+  // from the defaults instead of invalidating the whole saved layout.
+  if (!c) { result.components[name] = defaultComponent(name, value.profile); continue }
+  if (typeof c.visible !== 'boolean' || !number(c.scale, 0.25, 2) || !ANCHORS.includes(c.anchor)
    || !number(c.x, 0, 10000) || !number(c.y, 0, 10000)) throw Error(`Invalid ${name} layout`)
   result.components[name] = { visible: c.visible, scale: c.scale, anchor: c.anchor, x: c.x, y: c.y }
  }

@@ -12,6 +12,7 @@ import { COMPONENTS_DIR, CYBER_DIR, SCREEN_WIDTH, SCREEN_HEIGHT, scaleOf } from 
 import { loadUserColors } from "./components/modules/colors.ts"
 import { applyWmRules, applyWmFromTheme } from "./components/modules/wmconfig.ts"
 import { Monitors, setWorkspaceBadge } from "./components/modules/monitors.ts"
+import { Workspaces } from "./components/modules/workspaces.ts"
 import { SidePanel, openCityModal, openForecastModal } from "./components/modules/sidepanel.ts"
 import { MarketsPanel, openMarketsModal } from "./components/modules/markets.ts"
 import { openTimeModal } from "./components/modules/timeset.ts"
@@ -160,7 +161,7 @@ const monitorKey = (mon) => {
  } catch { return "unknown" }
 }
 const makeMonitorWindows = (mon) => {
- const factories = { monitors: Monitors, sidepanel: SidePanel, markets: MarketsPanel, hordock: HorizDock, toggles: Toggles }
+ const factories = { monitors: Monitors, workspaces: Workspaces, sidepanel: SidePanel, markets: MarketsPanel, hordock: HorizDock, toggles: Toggles }
  const wins = createSurfaces(hudLayout(), name => {
   const win = name === 'launcher' ? LauncherWindow(mon) : surface(mon, name, Anchor.TOP | Anchor.LEFT, factories[name](mon))
   if (name === 'launcher') hudWins.push(win)
@@ -322,7 +323,17 @@ App.start({
  } catch (e) { print(e) }
  reply("ok")
  } else if (request.startsWith("ws-go ")) {
- try { triggerWsSwitch(request.slice(6).trim()) } catch (e) { print(e) }
+ try {
+     const rest = request.slice(6).trim()
+     const space = rest.lastIndexOf(' ')
+     if (space > 0) {
+         const target = rest.slice(0, space)
+         const mk = rest.slice(space + 1)
+         triggerWsSwitch(target, mk)
+     } else {
+         triggerWsSwitch(rest)
+     }
+ } catch (e) { print(e) }
  reply("ok")
  } else if (request.startsWith("shutter")) {
  try { triggerShutter(request.slice(7).trim()) } catch (e) { print(e) }
